@@ -1,0 +1,582 @@
+    body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    font-family: 'Arial', sans-serif;
+    min-height: 100vh;
+    margin: 0;
+    padding: 10px;
+}
+
+.game-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.board {
+    width: 600px;
+    height: 600px;
+    margin: 20px auto;
+    position: relative;
+    background-image: url('board.png');
+    background-size: 600px 600px; 
+    background-position: 0 0; 
+    background-repeat: no-repeat;
+    border: 3px solid #343a40;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    overflow: hidden; 
+}
+
+.board-fallback {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600"><rect width="600" height="600" fill="%23f8f9fa" stroke="%23343a40" stroke-width="2"/><defs><pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse"><rect width="60" height="60" fill="none" stroke="%23dee2e6" stroke-width="1"/></pattern></defs><rect width="600" height="600" fill="url(%23grid)"/></svg>') !important;
+    background-size: 600px 600px !important;
+    background-position: 0 0 !important;
+}
+
+.cell {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 12px;
+    color: #343a40;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+    box-sizing: border-box;
+    transform: none;
+    margin: 0;
+    padding: 0;
+}
+
+.player-piece {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+    transition: all 0.5s ease;
+    box-sizing: border-box;
+    transform: translate(-50%, -50%);
+}
+
+.dice-container {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.dice {
+    width: 80px;
+    height: 80px;
+    background: #fff;
+    border: 3px solid #343a40;
+    border-radius: 15px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    font-weight: bold;
+    margin: 0 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.dice:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.dice.rolling {
+    animation: roll 1s ease-in-out;
+}
+
+@keyframes roll {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(90deg); }
+    50% { transform: rotate(180deg); }
+    75% { transform: rotate(270deg); }
+}
+
+.player-info {
+    background: rgba(248, 249, 250, 0.9);
+    border-radius: 15px;
+    padding: 20px;
+    margin: 20px 0;
+    border: 2px solid #e9ecef;
+}
+
+.current-player {
+    border-color: #007bff;
+    background: rgba(0, 123, 255, 0.1);
+    transform: scale(1.02);
+    box-shadow: 0 5px 20px rgba(0, 123, 255, 0.3);
+}
+
+.setup-screen {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.player-setup {
+    margin: 20px 0;
+    padding: 20px;
+    background: rgba(248, 249, 250, 0.9);
+    border-radius: 15px;
+    border: 2px solid #e9ecef;
+}
+
+.player-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #007bff;
+    margin: 10px;
+}
+
+.winner-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.winner-content {
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    border: 5px solid #ff6b35;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    animation: bounce 0.6s ease-out;
+    max-width: 90%;
+}
+
+@keyframes bounce {
+    0% { transform: scale(0.3); opacity: 0; }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.settings-panel {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+}
+
+.settings-btn {
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid #dee2e6;
+    color: #6c757d;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.settings-btn:hover {
+    background: #f8f9fa;
+    border-color: #007bff;
+    color: #007bff;
+    transform: rotate(90deg);
+}
+
+.hidden {
+    display: none;
+}
+
+.btn-custom {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border: none;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 25px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    margin: 5px;
+}
+
+.btn-custom:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    color: white;
+}
+
+.celebration {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50" font-size="80">🎉</text></svg>');
+    background-size: contain;
+    animation: celebrate 2s ease-in-out infinite;
+}
+
+@keyframes celebrate {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(360deg) scale(1.2); }
+}
+
+.board::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('board.png') 0 0/600px 600px no-repeat;
+    z-index: -1;
+}
+
+.board.error::before {
+    background: linear-gradient(45deg, #f8f9fa 25%, transparent 25%), 
+                linear-gradient(-45deg, #f8f9fa 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #f8f9fa 75%), 
+                linear-gradient(-45deg, transparent 75%, #f8f9fa 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+}
+
+
+@media (max-width: 767.98px) {
+    body {
+        padding: 5px;
+    }
+    
+    .game-container {
+        padding: 10px;
+        border-radius: 10px;
+    }
+    
+    .setup-screen {
+        padding: 20px 10px;
+    }
+    
+    .setup-screen h1 {
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+    }
+    
+    .setup-screen h3 {
+        font-size: 1.3rem;
+    }
+    
+    .btn-custom {
+        padding: 10px 20px;
+        font-size: 14px;
+        margin: 3px;
+        display: block;
+        width: 100%;
+        max-width: 250px;
+        margin: 8px auto;
+    }
+    
+    .player-setup {
+        margin: 10px 0;
+        padding: 15px;
+        z-index: 99;
+    }
+    
+    .player-avatar {
+        width: 50px;
+        height: 50px;
+        margin: 5px;
+    }
+    
+
+    #gameScreen .row {
+        flex-direction: column-reverse;
+    }
+    
+    #gameScreen .col-md-8,
+    #gameScreen .col-md-4 {
+        width: 100%;
+        max-width: 100%;
+        flex: none;
+    }
+    
+    
+    #playersInfo {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 20px;
+        overflow-x: auto;
+        padding: 10px 0;
+    }
+    
+    .player-info {
+        flex: 1;
+        min-width: 150px;
+        margin: 0;
+        padding: 10px;
+        border-radius: 10px;
+    }
+    
+    .player-info .d-flex {
+        flex-direction: column;
+        text-align: center;
+        align-items: center;
+    }
+    
+    .player-info .player-avatar {
+        width: 50px;
+        height: 50px;
+        margin: 5px 0;
+    }
+    
+    .player-info h5 {
+        font-size: 0.9rem;
+        margin: 5px 0;
+    }
+    
+    .player-info p {
+        font-size: 0.8rem;
+        margin: 2px 0;
+    }
+    
+
+    .board {
+        width: 100px;
+        height: 100px;
+        padding-bottom: 100px; 
+        max-width: 400px;
+        max-height: 400px;
+        margin: 10px auto;
+        border-width: 2px;
+        border-radius: 10px;
+        background-size: 100% 100% !important;
+        position: relative;
+    }
+    
+    .board::before {
+        background-size: 100% 100% !important; 
+    }
+    
+    .cell {
+        width: 10%;
+        height: 10%;
+        font-size: 8px;
+    }
+    
+    .player-piece {
+        width: 6%;
+        height: 6%;
+        border-width: 1px;
+        min-width: 15px;
+        min-height: 15px;
+    }
+    
+    .dice-container {
+        margin: 15px 0;
+    }
+    
+    .dice {
+        width: 60px;
+        height: 60px;
+        font-size: 28px;
+        margin: 0 5px;
+    }
+    
+    .dice-container .btn-custom {
+        max-width: 200px;
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+    
+    .settings-panel {
+        top: 10px;
+        right: 10px;
+        
+    }
+    
+    .settings-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+    
+    .winner-content {
+        padding: 20px;
+        margin: 20px;
+        max-width: calc(100% - 40px);
+    }
+    
+    .winner-content h1 {
+        font-size: 1.8rem;
+    }
+    
+    .winner-content h2 {
+        font-size: 1.4rem;
+    }
+    
+    .winner-content .player-avatar {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .celebration {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .board {
+        width: 500px;
+        height: 500px;
+        background-size: 500px 500px !important;
+    }
+    
+    .board::before {
+        background-size: 500px 500px !important;
+    }
+    
+    .cell {
+        width: 50px;
+        height: 50px;
+        font-size: 10px;
+    }
+    
+    .player-piece {
+        width: 25px;
+        height: 25px;
+    }
+    
+    .dice {
+        width: 70px;
+        height: 70px;
+        font-size: 32px;
+    }
+    
+    .player-info {
+        padding: 15px;
+    }
+    
+    .player-avatar {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .board {
+        max-width: 300px;
+        max-height: 300px;
+    }
+    
+    .dice {
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+    }
+    
+    .player-info {
+        min-width: 120px;
+        padding: 8px;
+    }
+    
+    .player-info .player-avatar {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .player-info h5 {
+        font-size: 0.8rem;
+    }
+    
+    .player-info p {
+        font-size: 0.7rem;
+    }
+    
+    .winner-content h1 {
+        font-size: 1.5rem;
+    }
+    
+    .setup-screen h1 {
+        font-size: 1.5rem;
+    }
+}
+
+
+@media (max-width: 375px) {
+    .board {
+        max-width: 280px;
+        max-height: 280px;
+    }
+    
+    .dice {
+        width: 45px;
+        height: 45px;
+        font-size: 20px;
+    }
+    
+    .player-info {
+        min-width: 100px;
+        padding: 6px;
+    }
+    
+    .player-info .player-avatar {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .btn-custom {
+        font-size: 12px;
+        padding: 8px 16px;
+    }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+    .setup-screen {
+        padding: 10px;
+    }
+    
+    .setup-screen h1 {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .winner-content {
+        padding: 15px;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+    
+    .board {
+        max-width: 250px;
+        max-height: 250px;
+    }
+    
+    #playersInfo {
+        max-width: 100%;
+        overflow-x: auto;
+    }
+    
+    .celebration {
+        width: 40px;
+        height: 40px;
+    }
+}
