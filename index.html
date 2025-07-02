@@ -30,13 +30,13 @@
     margin: 20px auto;
     position: relative;
     background-image: url('board.png');
-    background-size: 600px 600px; /* Force exact size, no cover/contain */
-    background-position: 0 0; /* Start from top-left */
+    background-size: 600px 600px; 
+    background-position: 0 0; 
     background-repeat: no-repeat;
     border: 3px solid #343a40;
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    overflow: hidden; /* Prevent any overflow */
+    overflow: hidden; 
 }
 
 .board-fallback {
@@ -57,7 +57,6 @@
     color: #343a40;
     text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
     box-sizing: border-box;
-    /* Remove any transforms or offsets */
     transform: none;
     margin: 0;
     padding: 0;
@@ -73,7 +72,6 @@
     z-index: 10;
     transition: all 0.5s ease;
     box-sizing: border-box;
-    /* Center the piece within the cell */
     transform: translate(-50%, -50%);
 }
 
@@ -250,7 +248,6 @@
     50% { transform: rotate(360deg) scale(1.2); }
 }
 
-/* Fallback untuk board jika gambar tidak ditemukan */
 .board::before {
     content: '';
     position: absolute;
@@ -271,9 +268,7 @@
     background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
 }
 
-/* RESPONSIVE DESIGN */
 
-/* Mobile First - Small devices */
 @media (max-width: 767.98px) {
     body {
         padding: 5px;
@@ -284,7 +279,6 @@
         border-radius: 10px;
     }
     
-    /* Setup screen mobile */
     .setup-screen {
         padding: 20px 10px;
     }
@@ -308,7 +302,6 @@
         margin: 8px auto;
     }
     
-    /* Player setup mobile */
     .player-setup {
         margin: 10px 0;
         padding: 15px;
@@ -377,7 +370,7 @@
     .board {
         width: 100px;
         height: 100px;
-        padding-bottom: 100px; /* 1:1 aspect ratio */
+        padding-bottom: 100px; 
         max-width: 400px;
         max-height: 400px;
         margin: 10px auto;
@@ -391,7 +384,6 @@
         background-size: 100% 100% !important; 
     }
     
-    /* Adjust cell sizes for mobile - percentage based for responsive */
     .cell {
         width: 10%;
         height: 10%;
@@ -406,7 +398,6 @@
         min-height: 15px;
     }
     
-    /* Dice mobile */
     .dice-container {
         margin: 15px 0;
     }
@@ -424,7 +415,6 @@
         padding: 8px 16px;
     }
     
-    /* Settings panel mobile */
     .settings-panel {
         top: 10px;
         right: 10px;
@@ -437,7 +427,6 @@
         font-size: 16px;
     }
     
-    /* Winner popup mobile */
     .winner-content {
         padding: 20px;
         margin: 20px;
@@ -463,7 +452,6 @@
     }
 }
 
-/* Tablet - Medium devices */
 @media (min-width: 768px) and (max-width: 991.98px) {
     .board {
         width: 500px;
@@ -502,7 +490,6 @@
     }
 }
 
-/* Small tablets and large phones landscape */
 @media (max-width: 575.98px) {
     .board {
         max-width: 300px;
@@ -542,7 +529,7 @@
     }
 }
 
-/* Very small phones */
+
 @media (max-width: 375px) {
     .board {
         max-width: 280px;
@@ -571,7 +558,6 @@
     }
 }
 
-/* Landscape orientation adjustments */
 @media (max-height: 500px) and (orientation: landscape) {
     .setup-screen {
         padding: 10px;
@@ -974,7 +960,7 @@ function createPlayersInfo() {
 }
 
 function placePlayers() {
-    // Hapus semua player piece yang ada
+
     document.querySelectorAll('.player-piece').forEach(piece => piece.remove());
     
     const pieceSize = Math.max(20, cellSize * 0.4);
@@ -999,16 +985,13 @@ function placePlayers() {
             player.score = 0;
         }
         
-        // Dapatkan posisi tengah kotak
         const position = getPositionCoordinates(player.position);
         
-        // Hitung offset untuk multiple players di kotak yang sama
         const offsetDistance = Math.max(3, cellSize * 0.08);
-        const angle = (index * 2 * Math.PI) / players.length; // Distribusi melingkar
+        const angle = (index * 2 * Math.PI) / players.length; 
         const offsetX = Math.cos(angle) * offsetDistance;
         const offsetY = Math.sin(angle) * offsetDistance;
         
-        // Posisikan piece di tengah kotak dengan offset kecil
         piece.style.left = `${position.x + offsetX - pieceSize/2}px`;
         piece.style.top = `${position.y + offsetY - pieceSize/2}px`;
         
@@ -1018,23 +1001,20 @@ function placePlayers() {
 
 function getPositionCoordinates(position) {
     if (position === 0) {
-        // Posisi start (sebelum kotak 1)
         return { 
             x: cellSize / 2, 
             y: boardSize - cellSize / 2 
         };
     }
     
-    // Hitung baris dan kolom berdasarkan posisi
     const row = Math.floor((position - 1) / 10);
     let col = (position - 1) % 10;
     
-    // Untuk baris ganjil (dari kiri ke kanan), untuk baris genap (dari kanan ke kiri)
     if (row % 2 === 1) {
         col = 9 - col;
     }
     
-    // Kembalikan koordinat tengah kotak
+
     return {
         x: col * cellSize + cellSize / 2,
         y: (9 - row) * cellSize + cellSize / 2
@@ -1084,7 +1064,6 @@ async function movePlayer(playerIndex, steps) {
         return;
     }
     
-    // Animasi langkah demi langkah
     for (let i = 1; i <= steps; i++) {
         currentPos = startPosition + i;
         await animatePlayerStep(playerIndex, currentPos);
@@ -1098,7 +1077,7 @@ async function movePlayer(playerIndex, steps) {
     let finalPosition = currentPos;
     let bonusPoints = 0;
     
-    // Cek apakah terkena ular
+
     if (snakes[currentPos]) {
         const snakeEnd = snakes[currentPos];
         showMessage(`${player.name} terkena ular! 🐍 Turun dari ${currentPos} ke ${snakeEnd}`);
@@ -1112,7 +1091,7 @@ async function movePlayer(playerIndex, steps) {
         bonusPoints = -10;
         await animateScoreChange(playerIndex, bonusPoints, 'ular');
     }
-    // Cek apakah naik tangga
+
     else if (ladders[currentPos]) {
         const ladderEnd = ladders[currentPos];
         showMessage(`${player.name} naik tangga! 🪜 Naik dari ${currentPos} ke ${ladderEnd}`);
@@ -1129,7 +1108,7 @@ async function movePlayer(playerIndex, steps) {
     
     document.getElementById(`player-pos-${playerIndex}`).textContent = finalPosition;
     
-    // Cek kemenangan
+
     if (finalPosition === 100) {
         bonusPoints += 100;
         await animateScoreChange(playerIndex, bonusPoints, 'menang');
@@ -1150,7 +1129,6 @@ function animatePlayerStep(playerIndex, position) {
         const piece = document.getElementById(`piece-${playerIndex}`);
         const targetPos = getPositionCoordinates(position);
         
-        // Hitung offset untuk multiple players
         const offsetDistance = Math.max(3, cellSize * 0.08);
         const angle = (playerIndex * 2 * Math.PI) / players.length;
         const offsetX = Math.cos(angle) * offsetDistance;
@@ -1158,12 +1136,11 @@ function animatePlayerStep(playerIndex, position) {
         
         const pieceSize = Math.max(20, cellSize * 0.4);
         
-        // Efek bounce saat bergerak
+
         piece.style.transform = 'scale(1.2)';
         piece.style.transition = 'all 0.3s ease';
         
         setTimeout(() => {
-            // Posisikan di tengah kotak dengan offset
             piece.style.left = `${targetPos.x + offsetX - pieceSize/2}px`;
             piece.style.top = `${targetPos.y + offsetY - pieceSize/2}px`;
             piece.style.transform = 'scale(1)';
